@@ -15,3 +15,13 @@
 uv run ruff check .
 uv run ruff format .
 ```
+
+
+## Database setup
+
+```sql
+CREATE TABLE users(
+    id int auto increment,
+    ....
+)
+```
