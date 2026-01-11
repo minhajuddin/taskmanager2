@@ -1,7 +1,5 @@
-import sys
-import time
 import os
-from flask import Flask, Blueprint, jsonify, request, render_template
+from flask import Flask, Blueprint, render_template
 from tasks_routes import tasks_bp
 
 main_bp = Blueprint("main", __name__)

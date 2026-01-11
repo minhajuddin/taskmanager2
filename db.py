@@ -29,7 +29,7 @@ def get_cursor(commit=True):
         yield cursor
         if commit:
             conn.commit()
-    except psycopg2.Error as e:
+    except psycopg2.Error:
         if conn:
             conn.rollback()
         raise
