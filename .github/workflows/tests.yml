@@ -28,8 +28,14 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      - name: Install Black
+        run: uv pip install black
+
       - name: Run tests
         run: uv run pytest tests/ -v
+
+      - name: Check Black formatting
+        run: uv run black --check . --exclude "migrations|\.venv"
 
       - name: Run linting
         run: uv run ruff check .
