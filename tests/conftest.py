@@ -12,8 +12,8 @@ from app import create_app
 def app():
     """Create and configure a test Flask app."""
     app = create_app()
-    app.config['TESTING'] = True
-    app.config['SECRET_KEY'] = 'test-secret-key'
+    app.config["TESTING"] = True
+    app.config["SECRET_KEY"] = "test-secret-key"
     return app
 
 

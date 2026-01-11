@@ -1,4 +1,4 @@
-.PHONY: help install test test-cov test-verbose lint format run db-migrate db-upgrade db-downgrade clean
+.PHONY: help install test test-cov test-verbose lint format lint-black format-black run db-migrate db-upgrade db-downgrade clean
 
 help:
 	@echo "Task Manager - Available Commands"
@@ -11,6 +11,8 @@ help:
 	@echo "  make run               Run the Flask development server"
 	@echo "  make lint              Lint code with ruff"
 	@echo "  make format            Format code with ruff"
+	@echo "  make lint-black        Lint code with black"
+	@echo "  make format-black      Format code with black"
 	@echo ""
 	@echo "Testing:"
 	@echo "  make test              Run tests"
@@ -58,6 +60,14 @@ format:
 	uv run ruff format . --exclude migrations
 	@echo "Checking formatting..."
 	uv run ruff check . --fix --exclude migrations
+
+lint-black:
+	@echo "Linting code with black..."
+	uv run black --check . --exclude "migrations|\.venv"
+
+format-black:
+	@echo "Formatting code with black..."
+	uv run black . --exclude "migrations|\.venv"
 
 db-migrate:
 	@read -p "Enter migration message: " msg; \

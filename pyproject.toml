@@ -17,3 +17,6 @@ test = [
     "pytest-flask>=1.2.0",
     "pytest-cov>=4.1.0",
 ]
+dev = [
+    "black>=24.1.0",
+]
