@@ -1,16 +1,14 @@
 import sys
 import time
 import os
-from flask import Flask
-
-from flask import Blueprint, jsonify, request
+from flask import Flask, Blueprint, jsonify, request, render_template
 
 main_bp = Blueprint("main", __name__)
 
 
 @main_bp.route("/")
 def index():
-    return jsonify({"status": "ok"})
+    return render_template("home.html")
 
 def register_routes(app):
     app.register_blueprint(main_bp)
