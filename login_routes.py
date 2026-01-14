@@ -28,7 +28,7 @@ def register_routes(app):
                     session["user_email"] = user["email"]
 
                     flash("Login successful")
-                    return redirect(url_for("index"))
+                    return redirect(url_for("home"))
 
             flash("Invalid email or password")
 
