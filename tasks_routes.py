@@ -87,3 +87,16 @@ def list_tasks():
     except psycopg2.Error:
         flash('Database error: Unable to load tasks', 'error')
         return render_template('tasks/index.html', tasks=[]), 500
+
+@tasks_bp.route('/<int:task_id>/delete', methods=['POST'])
+def delete_task(task_id):
+    try:
+        query = "DELETE FROM tasks WHERE id = %s"
+        execute_update(query, (task_id,))
+
+        flash('Task deleted successfully!', 'success')
+        return redirect(url_for('tasks.list_tasks'))
+
+    except Exception as e:
+        flash('Failed to delete task', 'error')
+        return redirect(url_for('tasks.list_tasks'))
