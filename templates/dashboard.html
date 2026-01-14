@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{# ================= PAGE TITLE ================= #}
+{% block title %}
+Dashboard | Task Manager
+{% endblock %}
+
+{# ================= MAIN CONTENT ================= #}
+{% block content %}
+
+<h1>Dashboard</h1>
+
+<!-- ================= STATISTICS SECTION ================= -->
+<div class="dashboard-stats">
+
+    <div class="stat-card">
+        <h3>Total Tasks</h3>
+        <p>{{ total_tasks }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Completed Tasks</h3>
+        <p>{{ completed_tasks }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Pending Tasks</h3>
+        <p>{{ pending_tasks }}</p>
+    </div>
+
+</div>
+
+<!-- ================= TASK LIST SECTION ================= -->
+<section class="task-section">
+
+    <h2>Recent Tasks</h2>
+
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ loop.index }}</td>
+
+                <td>{{ task.title }}</td>
+
+                <td>
+                    {% if task.completed %}
+                        <span class="status completed">Completed</span>
+                    {% else %}
+                        <span class="status pending">Pending</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if not task.completed %}
+                        <a href="{{ url_for('tasks.complete_task', task_id=task.id) }}">
+                            Complete
+                        </a>
+                    {% endif %}
+
+                    <a href="{{ url_for('tasks.delete_task', task_id=task.id) }}"
+                       onclick="return confirm('Are you sure you want to delete this task?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+
+            {% else %}
+            <tr>
+                <td colspan="4" class="empty">
+                    No tasks found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</section>
+
+{% endblock %}
