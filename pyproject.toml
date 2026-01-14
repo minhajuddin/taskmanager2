@@ -1,0 +1,19 @@
+[project]
+name = "taskmanager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.0",
+    "flask>=3.1.2",
+    "psycopg2>=2.9.11",
+    "ruff>=0.14.11",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.0",
+    "pytest-flask>=1.2.0",
+    "pytest-cov>=4.1.0",
+]
