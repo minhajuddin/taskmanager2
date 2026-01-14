@@ -7,8 +7,22 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
 def index():
-    return render_template("home.html")
+    # Fetch recent tasks
+    tasks = Task.query.order_by(Task.id.desc()).limit(5).all()
 
+    # Dashboard statistics
+    total_tasks = Task.query.count()
+    completed_tasks = Task.query.filter_by(completed=True).count()
+    pending_tasks = Task.query.filter_by(completed=False).count()
+
+    # Render dashboard template
+    return render_template(
+        "dashboard.html",
+        tasks=tasks,
+        total_tasks=total_tasks,
+        completed_tasks=completed_tasks,
+        pending_tasks=pending_tasks
+    )
 def register_routes(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp)
