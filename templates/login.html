@@ -1,0 +1,15 @@
+{%  extends "base.html" %}
+{% block title %}Login - Task Manager{% endblock %}
+{% block content %}
+<div  class ="form">
+    <h2> login to your account </h2>
+    <form method ="POST">
+        <input class= " form-input" type="email" name="Username" placeholder="Username" required><br>
+        <input class= " form-input" type="password" name="password" placeholder="Password" required><br>
+        <button class="btn" type="submit">Login</button>
+    </form>
+    <a href="{{ url_for('main.register') }}">Don't have an account? Register here.</a>
+</div>
+{% endblock %}
+
+

@@ -1,17 +1,28 @@
 import os
-from flask import Flask, Blueprint, render_template
+from flask import Flask, Blueprint, render_template , request 
 from tasks_routes import tasks_bp
+from register_routes import register_bp
+from login_routes import login_bp
+
+
+app = Flask(__name__)
+app.secret_key = "secret123"
 
 main_bp = Blueprint("main", __name__)
+
 
 
 @main_bp.route("/")
 def index():
     return render_template("home.html")
 
+
+
 def register_routes(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp)
+    app.register_blueprint(login_bp)
+    app.register_blueprint(register_bp)
 
 def create_app(config_name=None):
     if config_name is None:
