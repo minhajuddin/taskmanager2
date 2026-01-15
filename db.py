@@ -5,8 +5,7 @@ from contextlib import contextmanager
 
 # TODO: Don't hardcode credentials
 DATABASE_URL = os.environ.get(
-    'DATABASE_URL',
-    'postgresql://taskmanager:taskmanager@localhost/taskmanager_dev'
+    "DATABASE_URL", "postgresql://taskmanager:taskmanager@localhost/taskmanager_dev"
 )
 
 
