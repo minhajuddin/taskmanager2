@@ -1,44 +1,86 @@
-# edit_task.py
-from flask import render_template, request, redirect, url_for, flash
-from tasks_routes import tasks_bp
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from db import execute_query, execute_update
 import psycopg2
-from tasks_routes import validate_task_form
+
+edit_task_bp = Blueprint('edit_task', __name__, url_prefix='/tasks')
 
 
-@tasks_bp.route('/<int:task_id>/edit', methods=['GET'])
+def validate_task_form(form_data):
+    errors = {}
+    title = form_data.get('title', '').strip()
+    description = form_data.get('description', '').strip()
+
+    if not title:
+        errors['title'] = 'Title is required'
+    elif len(title) > 255:
+        errors['title'] = 'Title must be 255 characters or less'
+
+    if description and len(description) > 255:
+        errors['description'] = 'Description must be 255 characters or less'
+
+    return errors, {'title': title, 'description': description}
+
+
+@edit_task_bp.route('/<int:task_id>/edit', methods=['GET'])
 def edit_task(task_id):
-    query = "SELECT id, title, description FROM tasks WHERE id=%s"
-    task = execute_query(query, (task_id,), fetch_one=True)
+    query = """
+        SELECT id, title, description
+        FROM tasks
+        WHERE id = %s
+    """
+    result = execute_query(query, (task_id,))
+    row = result[0] if result else None
 
-    if not task:
-        flash("Task not found", "error")
-        return redirect(url_for("tasks.list_tasks"))
+    if not row:
+        flash('Task not found', 'error')
+        return redirect(url_for('tasks.list_tasks'))
 
-    return render_template("tasks/edit.html", task=task)
+    task = {
+        'id': row[0],
+        'title': row[1],
+        'description': row[2]
+    }
+
+    return render_template('tasks/edit.html', task=task)
 
 
-@tasks_bp.route('/<int:task_id>/edit', methods=['POST'])
+
+
+@edit_task_bp.route('/<int:task_id>/edit', methods=['POST'])
 def update_task(task_id):
     errors, cleaned_data = validate_task_form(request.form)
 
     if errors:
+        for err in errors.values():
+            flash(err, 'error')
+
         return render_template(
-            "tasks/edit.html",
-            task={"id": task_id, **cleaned_data},
+            'tasks/edit.html',
+            task={
+                'id': task_id,
+                'title': request.form.get('title'),
+                'description': request.form.get('description')
+            },
             errors=errors
-        )
+        ), 400
 
     query = """
         UPDATE tasks
-        SET title=%s, description=%s, updated_at=NOW()
-        WHERE id=%s
+        SET title = %s,
+            description = %s,
+            updated_at = NOW()
+        WHERE id = %s
     """
-    execute_update(query, (
-        cleaned_data['title'],
-        cleaned_data['description'],
-        task_id
-    ))
+    execute_update(
+        query,
+        (
+            cleaned_data['title'],
+            cleaned_data['description'] or None,
+            task_id
+        )
+    )
 
-    flash("Task updated successfully", "success")
-    return redirect(url_for("tasks.list_tasks"))
+    flash('Task updated successfully!', 'success')
+    return redirect(url_for('tasks.list_tasks'))
+
+

@@ -24,11 +24,12 @@
                 </span>
             </div>
 
-            <!-- ✅ EDIT BUTTON (CORRECT PLACE) -->
-            <a href="{{ url_for('tasks.edit_task', task_id=task['id']) }}"
-               class="btn btn-secondary">
+            
+            <a href="{{ url_for('edit_task.edit_task', task_id=task.id) }}">
                 Edit
             </a>
+
+
         </div>
         {% endfor %}
     {% else %}
