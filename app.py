@@ -9,16 +9,20 @@ main_bp = Blueprint("main", __name__)
 def index():
     return render_template("home.html")
 
+
 def register_routes(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp)
+
 
 def create_app(config_name=None):
     if config_name is None:
         config_name = os.environ.get("FLASK_ENV", "default")
 
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+    app.config["SECRET_KEY"] = os.environ.get(
+        "SECRET_KEY", "dev-secret-key-change-in-production"
+    )
     # app.config.from_object(config[config_name])
 
     # Initialize extensions
