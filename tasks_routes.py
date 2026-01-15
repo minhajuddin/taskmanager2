@@ -88,15 +88,16 @@ def list_tasks():
         flash('Database error: Unable to load tasks', 'error')
         return render_template('tasks/index.html', tasks=[]), 500
 
-@tasks_bp.route('/<int:task_id>/delete', methods=['POST'])
+@tasks_bp.route('/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     try:
         query = "DELETE FROM tasks WHERE id = %s"
-        execute_update(query, (task_id,))
+        rows_affected = execute_update(query, (task_id,))
 
-        flash('Task deleted successfully!', 'success')
-        return redirect(url_for('tasks.list_tasks'))
+        if rows_affected == 0:
+            return {"error": "Task not found"}, 404
+
+        return {"message": "Task deleted successfully"}, 200
 
     except Exception as e:
-        flash('Failed to delete task', 'error')
-        return redirect(url_for('tasks.list_tasks'))
+        return {"error": "Database error while deleting task"}, 500
