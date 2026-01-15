@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from db import execute_query, execute_update
-import psycopg2
 
 edit_task_bp = Blueprint('edit_task', __name__, url_prefix='/tasks')
 
@@ -43,24 +42,17 @@ def edit_task(task_id):
 
     return render_template('tasks/edit.html', task=task)
 
-
-
-
-@edit_task_bp.route('/<int:task_id>/edit', methods=['POST'])
+@edit_task_bp.route('/<int:task_id>', methods=['POST', 'PUT'])
 def update_task(task_id):
+    
+    if request.method == 'POST' and request.form.get('_method') != 'PUT':
+        abort(405)
+
     errors, cleaned_data = validate_task_form(request.form)
-
     if errors:
-        for err in errors.values():
-            flash(err, 'error')
-
         return render_template(
             'tasks/edit.html',
-            task={
-                'id': task_id,
-                'title': request.form.get('title'),
-                'description': request.form.get('description')
-            },
+            task={'id': task_id, **cleaned_data},
             errors=errors
         ), 400
 
@@ -75,12 +67,10 @@ def update_task(task_id):
         query,
         (
             cleaned_data['title'],
-            cleaned_data['description'] or None,
+            cleaned_data['description'],
             task_id
         )
     )
 
     flash('Task updated successfully!', 'success')
     return redirect(url_for('tasks.list_tasks'))
-
-
