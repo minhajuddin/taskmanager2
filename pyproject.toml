@@ -16,8 +16,8 @@ test = [
     "pytest>=7.4.0",
     "pytest-flask>=1.2.0",
     "pytest-cov>=4.1.0",
+    "pytest",
 ]
 dev = [
     "black>=24.1.0",
 ]
-[tool.pytest.ini_options]
