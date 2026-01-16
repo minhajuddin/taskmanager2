@@ -453,3 +453,25 @@ footer p {
         padding: 2rem 1rem;
     }
 }
+.overdue {
+    border-left: 5px solid red;
+    background-color: #ffecec;
+}
+
+.status {
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+
+.overdue-text {
+    color: red;
+    font-weight: bold;
+}
+
+.upcoming {
+    color: #555;
+}
+
+.done {
+    color: green;
+}
