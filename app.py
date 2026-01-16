@@ -1,9 +1,10 @@
 import os
-from flask import Flask, Blueprint, render_template
+from flask import Flask, Blueprint, render_template , request 
 from tasks_routes import tasks_bp
+from register_routes import register_bp
+from login_routes import login_bp
 
 main_bp = Blueprint("main", __name__)
-
 
 @main_bp.route("/")
 def index():
@@ -13,6 +14,8 @@ def index():
 def register_routes(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp)
+    app.register_blueprint(login_bp)
+    app.register_blueprint(register_bp)
 
 
 def create_app(config_name=None):
@@ -48,4 +51,4 @@ def create_app(config_name=None):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=5001)
+    app.run(host="0.0.0.0", port=5001, debug=True)
