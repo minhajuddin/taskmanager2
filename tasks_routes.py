@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from db import execute_query, execute_update
 import psycopg2
+from datetime import date
 
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 
@@ -40,6 +41,8 @@ def create_task():
     """Handle task creation."""
     # Validate form data
     errors, cleaned_data = validate_task_form(request.form)
+    due_date = request.form.get("due_date") or None
+    cleaned_data["due_date"] = due_date
 
     if errors:
         for field, error_msg in errors.items():
@@ -52,11 +55,11 @@ def create_task():
     try:
         # Insert task into database
         query = """
-            INSERT INTO tasks (title, description)
-            VALUES (%s, %s)
-            RETURNING id, title, description, completed_at, created_at, updated_at
+            INSERT INTO tasks (title, description, due_date)
+            VALUES (%s, %s, %s)
+            RETURNING id, title, description, due_date, completed_at, created_at, updated_at
         """
-        params = (cleaned_data["title"], cleaned_data["description"] or None)
+        params = (cleaned_data["title"], cleaned_data["description"] or None, cleaned_data.get("due_date") or None)
         result = execute_update(query, params)
 
         if result:
@@ -81,12 +84,13 @@ def list_tasks():
     """Display all tasks."""
     try:
         query = """
-            SELECT id, title, description, completed_at, created_at, updated_at
+            SELECT id, title, description, due_date, completed_at, created_at, updated_at
             FROM tasks
             ORDER BY created_at DESC
         """
         tasks = execute_query(query)
-        return render_template("tasks/index.html", tasks=tasks)
+        today = date.today()
+        return render_template("tasks/index.html", tasks=tasks, today=today)
 
     except psycopg2.Error:
         flash("Database error: Unable to load tasks", "error")

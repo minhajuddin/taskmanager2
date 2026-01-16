@@ -11,13 +11,20 @@
 <div class="tasks-list">
     {% if tasks %}
         {% for task in tasks %}
-        <div class="task-card">
+        <div class="task-card {% if task['due_date'] and task['due_date'] < today and not task['completed_at'] %}overdue{% endif %}">
             <h3>{{ task['title'] }}</h3>
             {% if task['description'] %}
             <p class="task-description">{{ task['description'] }}</p>
             {% endif %}
             <div class="task-meta">
                 <span>Created: {{ task['created_at'].strftime('%Y-%m-%d %H:%M') }}</span>
+                {% if task['completed_at'] %}
+                    <span class="status done">Completed</span>
+                {% elif task['due_date'] and task['due_date'] < today %}
+                    <span class="status overdue-text">Overdue</span>
+                {% elif task['due_date'] %}
+                    <span class="status upcoming">Due: {{ task['due_date'] }}</span>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
