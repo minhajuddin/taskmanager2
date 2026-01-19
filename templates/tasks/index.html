@@ -13,18 +13,31 @@
         {% for task in tasks %}
         <div class="task-card">
             <h3>{{ task['title'] }}</h3>
+
             {% if task['description'] %}
             <p class="task-description">{{ task['description'] }}</p>
             {% endif %}
+
             <div class="task-meta">
-                <span>Created: {{ task['created_at'].strftime('%Y-%m-%d %H:%M') }}</span>
+                <span>
+                    Created: {{ task['created_at'].strftime('%Y-%m-%d %H:%M') }}
+                </span>
             </div>
+
+            
+            <a href="{{ url_for('edit_task.edit_task', task_id=task.id) }}">
+                Edit
+            </a>
+
+
         </div>
         {% endfor %}
     {% else %}
         <div class="empty-state">
             <p>No tasks yet. Create your first task!</p>
-            <a href="{{ url_for('tasks.new_task') }}" class="btn btn-primary">Create Task</a>
+            <a href="{{ url_for('tasks.new_task') }}" class="btn btn-primary">
+                Create Task
+            </a>
         </div>
     {% endif %}
 </div>

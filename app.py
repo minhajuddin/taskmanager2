@@ -1,6 +1,7 @@
 import os
 from flask import Flask, Blueprint, render_template
 from tasks_routes import tasks_bp
+from edit_task import edit_task_bp 
 
 main_bp = Blueprint("main", __name__)
 
@@ -13,6 +14,7 @@ def index():
 def register_routes(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp)
+    app.register_blueprint(edit_task_bp)
 
 
 def create_app(config_name=None):
@@ -48,4 +50,6 @@ def create_app(config_name=None):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=5001)
+    app.run(debug=True)
+
+
